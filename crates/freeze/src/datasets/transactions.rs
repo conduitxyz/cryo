@@ -32,6 +32,7 @@ pub struct Transactions {
     r: Vec<Vec<u8>>,
     s: Vec<Vec<u8>>,
     v: Vec<u64>,
+    rlp_bytes: Vec<Vec<u8>>,
 }
 
 #[async_trait::async_trait]
@@ -61,6 +62,10 @@ impl Dataset for Transactions {
             "n_input_zero_bytes",
             "n_input_nonzero_bytes",
             "chain_id",
+            "v",
+            "r",
+            "s",
+            "rlp_bytes",
         ])
     }
 
@@ -233,6 +238,7 @@ pub(crate) fn process_transaction(
     store!(schema, columns, v, tx.v.as_u64());
     store!(schema, columns, r, tx.r.to_vec_u8());
     store!(schema, columns, s, tx.s.to_vec_u8());
+    store!(schema, columns, rlp_bytes, tx.rlp().to_vec());
 
     Ok(())
 }
